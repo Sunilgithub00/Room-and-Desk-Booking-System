@@ -1,0 +1,131 @@
+Create database RoomDeskBookingSystem
+
+Create table tblAccessLevel(pkAccesslevelId int, AccesslevelName varchar(100))
+insert into tblAccessLevel values (1,'Global Admin'),(2,'Country Admin'),(3,'Location Admin'),(4,'User')
+
+Create table tblCountry(pkcountryId int,countryname varchar(100))
+insert into tblCountry values (1,'India'),(2,'USA'),(3,'UK'),(4,'UAE')
+
+Create table tblregion(pkregionId int, fkcountryId int, regionname varchar(100))
+insert into tblregion values (1, 1,'Haryana'),(2, 1,'NY'),(3, 2,'KA')
+
+Create table tbllocation(pklocationId int,fkregionId int,locationname varchar(100),Address1 varchar(100),Address2 varchar(100))
+insert into tbllocation values (1, 1, 'Gurugram','Cybercity',' '),(2,3,'LA','XYZ',' '),(3, 1, 'Bangalore','Manayata Tech Park','Building10')
+
+Create table tbllanguage(pklanguageid int,langname varchar(100))
+insert into tbllanguage values (1, 'English'),(2, 'French'),(3, 'Spanish')
+
+Create table tblfloor(pkfloorid int,floorname varchar(100),fklocationid int , floorNum int)
+insert into tblfloor values (1, '1st Floor',1,0),(2, '2nd Floor',1,1)
+
+Create table tblrole(pkroleId int,rolename varchar(100))
+insert into tblrole values (1, 'Corporate'),(2, 'IT'),(3, 'Support')
+
+Create table tbldepartment(pkdepartId int,departname varchar(100),fkroleid int)
+insert into tbldepartment values (1, 'HR',1),(2, 'Marketing',1),(3, 'IT',2)
+
+Create table tbllogintype(pklogintypeid int,logintype varchar(100))
+insert into tbllogintype values (1, 'Forms'),(2, 'SSO')
+
+Create table tbldeskAttributes(pkdeskAttrid int, AttName varchar(100))
+insert into tbldeskAttributes values (1,'Mouse'),(2,'Keyboard'),(3,'Telephone'),(4,'Screen')
+
+Create table tbluser(pkuserid int,name varchar(100),email varchar(100), accountactive int, fkAccesslevel int, userAdded datetime, mobile varchar(100),username varchar(100),fklogintypeid int)
+insert into tbluser values (1, 'Ram', 'ram@gmail.com',1,3,'2022-06-02 07:48:13.030',12345678,'Ramk' ,1),
+                           (2, 'Mohan','Mohan@gmail.com',1,1,'2022-07-02 07:48:13.030',12345677,'Mohank',2),
+						    (3, 'Arjun','Arjun@gmail.com',1,1,'2022-06-04 07:48:13.030',12345670,'ArjunB',2),
+							 (4, 'Arjun','Arjun@gmail.com',1,2,'2022-06-05 07:48:13.030',12345679,'ArjunC',1)
+
+
+Create table tbluserdetail(pkuserdetailid int,fkcountryId int,fkregionId int,fklocationId int,fklanguageid int, fkdepartment int, fkuserid int,fkfloorid int)
+insert into tbluserdetail values (1,1,1,1,1,2,1,1),(2,2,2,2,2,4,2,2)
+
+Create table tbluserAttmapping(fkuserid int , fkdeskAttid int)
+insert into tbluserAttmapping values(1,1),(1,3),(1,4)
+
+
+Create table tblbookingType(pkbookingTypeid int, resourcename varchar(100))
+insert into tblbookingType values (1,'MeetingRoom'),(2,'Desk')
+
+Create table tblroomstatus(pkstatusid int,statusname varchar(100))
+insert into tblroomstatus values(1,'open'),(2,'closed')
+
+Create table tblrooms(pkroomid int, fkbookingTypeid int, fkcountryid int, fklocationid int, Name varchar(100),fkstatusid int,Attendecount int)
+insert into tblrooms values (101,11,1,1,'MeetingRoom1',1,8),(102,1,1,1,'MeetingRoom2',1,4),(103,1,1,1,'TrainingRoom',1,5),(104,1,1,1,'DiningRoom',1,10)
+
+Create table tbldesktype(pkdesktypeid int,Name varchar(100))
+insert into tbldesktype values (1,'Bookable'),(2,'Fixed')
+
+Create table tbldesklist(pkdeskid int, fkbookingTypeid int, fkcountryid int, fklocationid int,Name varchar(100),fkdesktype int,fkstatusid int)
+insert into tbldesklist values (20,2,1,1,'Desk1',1,1),(21,2,1,1,'Desk2',2,1),(22,2,1,1,'Desk3',1,1),(23,2,1,1,'Desk4',2,1)
+
+create table tblfixeduserdeskmap(pkfixeduserdeskmapid int, fkuserid int,fkdesktypeid int,fkdeskid int)
+insert into tblfixeduserdeskmap values(1,4,1,23)
+
+Create table tblbookingsource(pkbookingsourceid int,bookingsource varchar(100))
+insert into tblbookingsource values (1, 'Web'),(2,'mobile'),(3,'screen')
+
+create table tblresourcebookingmap(pkresourcebookingmappingid int , fkitemid int,fkroomid int, fkdesklist int)
+insert  into tblresourcebookingmap values (1,11,101,NULL),(2,12,102,NULL),(3,13,103,NULL),(4,14,104,NULL),
+(5,15,NULL,20),(6,16,NULL,21),(7,17,NULL,22),(8,18,NULL,23)
+
+Create table tblbooking(pkbookingid int,fklocationid int,fkuserid int , fkbookingsource int,dateAdded date,deleteBooking int)
+insert into tblbooking values (1, 1, 1,1,'2022-10-12', 0),(2,2,2,2,'2022-11-12',0),(3,1,1,2,'2022-09-12',0),(4,2,2,1,'2022-09-10',0),(5,2,2,1,'2022-08-08',0)
+
+Create table tblbookingitem(pkbookingitemid int,fkitemid int,fkbookingTypeid int, fkbookingid int, active int, DateFrom date ,
+Dateto date, TimeFrom nvarchar(10), TimeTo nvarchar(10))
+insert into tblbookingitem values (1,11, 1,1,1,'2022-10-12','2022-10-12','9:00','6:00'),(2,15,2, 2,1,'2022-11-12', '2022-11-12', '9:00','6:00'),
+(3,11,2, 3,1,'2022-09-12', '2022-09-12', '9:00','2:00'),(4,11,2, 5,1,'2022-08-08', '2022-08-08', '9:00','2:00')
+
+Create table tblvendor(pkvendorid int, fkcountryid int, vendorName varchar(100), vendoremail varchar(100))
+insert into tblvendor values(1,1,'CateringVendor','ABC@gmail.com'),(2,1,'Deskcleanvendor','XYZ@gmail.com'),(3,1,'Equip','pqr@gmail.com')
+
+Create table tblservices(pkserviceid int,fkcountryid int , fklocationid int, servicename varchar(100),fkbookingTypeid int,fkvendorid int)
+insert into tblservices values(1,1,1,'Drinks',1,1),(2,1,1,'AV',1,3),(3,1,1,'Lunch',1,1)
+
+Create table tblVisitor(pkvisitorid int,Visitorname varchar(100),Visitingcompany varchar(100),VisitTime datetime , visitingemail varchar(100),fkbookingid int,fkvisitortypeid int)
+insert into tblVisitor values(1,'Test1','Accenture','2022-10-12 10:44:44.107','ram@gmail.com',1,2)
+
+Create table tblVisitorType(pkvisitortypeid int,Visitortype varchar(100))
+insert into tblVisitorType values(1,'InternalVisitor'),(2,'ExternalVisitor')
+
+Create table tbldeskcheckin(pkdeskcheckiinid int,fkbookingid int,fkbookingitemid int, checkintime datetime ,fkuserid int)
+insert into tbldeskcheckin values(1,1,1,'2022-06-03 10:44:44.107',1)
+
+Create table tbldeskfreeifnotcheckin(pkdeskfreeid int,fkbookingitemid int, deskfree datetime ,checkin int)
+insert into tbldeskfreeifnotcheckin values(1,4,'2022-08-08 10:44:44.107',1)
+
+Create table tblmeetingroomcheckin(pkmeetingroomcheckinid int,fkbookingid int,fkbookingitemid int, checkintime datetime ,fkuserid int)
+insert into tblmeetingroomcheckin values(1,1,1,'2022-06-04 10:44:44.107',1)
+
+Create table tblgrouptype(pkgrouptypeid int,grouptype varchar(100))
+insert into tblgrouptype values(1,'Managed'),(2,'selfmanaged')
+
+Create table tblgroup(pkgroupid int,fkcountryId int, fkgrouptypeid int,fkbookingType int, groupname varchar(100), BH_starttime nvarchar(10),BH_endtime nvarchar(10))
+insert into tblgroup values(1,1,1,1,'clientsselfmanagedspace','8:00','21:00'),(2,2,2,1,'clientsmanagedspace','8:00','21:00')
+
+Create table tblAction(pkactionid int,Actionname varchar(100)) 
+insert into tblAction values(1,'FirstReminder'),(2,'Start'),(3,'End')
+
+Create table tblNotification(pknotiyid int,bookingId int, fkActionid int,Statusinfo varchar(100))
+insert into tblNotification values(1,1,1,'NULL'),(2,1,2,'NULL'),(3,1,3,'NULL')
+
+Create table tblDBerror(pkerrorid int, ErrorLine int,ProcedureName varchar(100),ErrorName varchar(100),ErrorDatetime datetime )
+insert into tblDBerror values(1,25,'usp_Booking_Manage','insert stmt conflicted','2022-06-04 10:44:44.107')
+
+Create table tblAuditlog(pklogid int, changedby int, ModuleName varchar(100), changedAt datetime)
+insert into tblAuditlog values(1,2,'Services','2022-06-04 10:44:44.107')
+
+Create table tblgrouproommap(groupid int, room int, editg int, viewg int)
+insert into tblgrouproommap values(1,101,0,0)
+
+Create table tblgroupdeskmap(groupid int, deskid int, editg int, viewg int,grouptypeid int)
+insert into tblgroupdeskmap values(1,20,0,0,1)
+
+
+Create table tblgroupmaps(groupid int , grouptypeid int)
+insert into tblgroupmaps values(1,1)
+
+Create table tblemailtemplate(pktempid int, description varchar(100),fkbookingTypeid int,sendemailto varchar(100))
+insert into tblemailtemplate values(1,'Create',1,'<bookingcreated:bookedby:emailaddress><booking:requestor:email>'),
+(2,'update',1,'<bookingupdated:bookedby:emailaddress><booking:requestor:email>'),(3,'delete',1,'<bookingdeleted:bookedby:emailaddress><booking:requestor:email>')
